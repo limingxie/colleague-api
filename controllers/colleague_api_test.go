@@ -14,7 +14,7 @@ import (
 )
 
 func Test_ColleagueApiController_GetColleagueById(t *testing.T) {
-	req := httptest.NewRequest(echo.GET, "/api/v1/colleagues/:id", nil)
+	req := httptest.NewRequest(echo.GET, "/v1/colleagues/:id", nil)
 
 	c, rec := SetContext(req)
 	dbSession := factory.DB(c.Request().Context())

@@ -88,8 +88,6 @@ func initEchoApp(xormEngine *xorm.Engine) *echo.Echo {
 }
 
 func InitControllers(e *echo.Echo) {
-	v1Group := e.Group("")
-
-	controllers.HomeApiController{}.Init(e.Group("/ping"))
-	controllers.ColleagueApiController{}.Init(v1Group)
+	controllers.HomeApiController{}.Init(e)
+	controllers.ColleagueApiController{}.Init(e)
 }

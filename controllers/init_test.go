@@ -15,8 +15,8 @@ import (
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pangpanglabs/goutils/echomiddleware"
+	"github.com/pangpanglabs/goutils/kafka"
 
-	"github.com/hublabs/colleague-api/filters"
 	"github.com/hublabs/colleague-api/models"
 )
 
@@ -44,7 +44,7 @@ func init() {
 
 	echoApp = echo.New()
 	handleWithFilter = func(handlerFunc echo.HandlerFunc, c echo.Context) error {
-		return filters.SetDbContext(xormEngine)(handlerFunc)(c)
+		return echomiddleware.ContextDB(configutil.Service, xormEngine, kafka.Config{})(handlerFunc)(c)
 	}
 	ctx = context.WithValue(context.Background(), echomiddleware.ContextDBName, xormEngine.NewSession())
 }
