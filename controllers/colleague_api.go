@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/hublabs/colleague-api/models"
+	"github.com/hublabs/common/api"
 
 	"github.com/labstack/echo"
 )
@@ -12,8 +13,8 @@ import (
 type ColleagueApiController struct {
 }
 
-func (c ColleagueApiController) Init(g *echo.Group) {
-	g.GET("/api/v1/colleagues/:id", c.GetColleagueById)
+func (c ColleagueApiController) Init(g *echo.Echo) {
+	g.GET("/v1/colleagues/:id", c.GetColleagueById)
 }
 
 func (c ColleagueApiController) GetColleagueById(ctx echo.Context) error {
@@ -30,7 +31,7 @@ func (c ColleagueApiController) GetColleagueById(ctx echo.Context) error {
 	/*=======================> Main Function GetColleagueById <=======================*/
 	result, err := models.Colleague{}.GetColleagueById(ctx.Request().Context(), colleagueId)
 	if err != nil {
-		return ReturnApiFail(ctx, ApiErrorDB, err, map[string]interface{}{"colleagueId": colleagueId})
+		return ReturnApiFail(ctx, api.ErrorDB, err, map[string]interface{}{"colleagueId": colleagueId})
 	}
 
 	return ReturnResultApiSucc(ctx, http.StatusOK, result)

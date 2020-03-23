@@ -9,8 +9,8 @@ import (
 type HomeApiController struct {
 }
 
-func (c HomeApiController) Init(g *echo.Group) {
-	g.GET("", c.Ping)
+func (c HomeApiController) Init(g *echo.Echo) {
+	g.GET("/ping", c.Ping)
 }
 
 func (c HomeApiController) Ping(ctx echo.Context) error {
