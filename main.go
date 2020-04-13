@@ -90,4 +90,5 @@ func initEchoApp(xormEngine *xorm.Engine) *echo.Echo {
 func InitControllers(e *echo.Echo) {
 	controllers.HomeApiController{}.Init(e)
 	controllers.ColleagueApiController{}.Init(e)
+	controllers.AuthenticationApiController{}.Init(e)
 }

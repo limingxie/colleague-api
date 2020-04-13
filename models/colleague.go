@@ -8,6 +8,9 @@ import (
 type Colleague struct {
 	Id        int64     `json:"id"`
 	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Mobile    string    `json:"mobile"`
+	Password  string    `json:"password"`
 	Enable    bool      `json:"enable"`
 	CreatedAt time.Time `json:"-" xorm:"created"`
 	UpdatedAt time.Time `json:"-" xorm:"updated"`
