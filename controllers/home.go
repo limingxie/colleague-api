@@ -14,5 +14,5 @@ func (c HomeApiController) Init(g *echo.Echo) {
 }
 
 func (c HomeApiController) Ping(ctx echo.Context) error {
-	return ReturnResultApiSucc(ctx, http.StatusOK, "colleague-api-ping")
+	return renderSucc(ctx, http.StatusOK, "colleague-api-ping")
 }
