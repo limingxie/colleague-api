@@ -15,9 +15,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 
+	"github.com/hublabs/colleague-api/colleagues"
 	configutil "github.com/hublabs/colleague-api/config"
 	"github.com/hublabs/colleague-api/controllers"
-	"github.com/hublabs/colleague-api/models"
+	"github.com/hublabs/colleague-api/tenants"
 )
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 	}
 
 	defer xormEngine.Close()
-	models.SetXormEngineSync(xormEngine)
+	SetXormEngineSync(xormEngine)
 
 	app := cli.NewApp()
 	app.Name = "colleague"
@@ -48,7 +49,7 @@ func main() {
 			Name:  "seed",
 			Usage: "create seed data",
 			Action: func(c *cli.Context) error {
-				if err := models.Seed(xormEngine); err != nil {
+				if err := colleagues.Seed(xormEngine); err != nil {
 					return err
 				}
 				return nil
@@ -90,5 +91,15 @@ func initEchoApp(xormEngine *xorm.Engine) *echo.Echo {
 func InitControllers(e *echo.Echo) {
 	controllers.HomeApiController{}.Init(e)
 	controllers.ColleagueApiController{}.Init(e)
-	controllers.AuthenticationApiController{}.Init(e)
+	controllers.LoginApiController{}.Init(e)
+}
+
+func SetXormEngineSync(xormEngine *xorm.Engine) {
+	//xormEngine.ShowSQL(true)
+
+	xormEngine.Sync(new(tenants.Brand))
+
+	xormEngine.Sync(new(colleagues.Colleague))
+
+	xormEngine.Sync(new(colleagues.Store))
 }

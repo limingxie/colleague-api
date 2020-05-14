@@ -1,15 +1,8 @@
-package models
+package colleagues
 
 import (
 	"regexp"
-
-	"github.com/go-xorm/xorm"
 )
-
-func SetXormEngineSync(xormEngine *xorm.Engine) {
-	//xormEngine.ShowSQL(true)
-	xormEngine.Sync(new(Colleague))
-}
 
 //email verify
 func VerifyEmailFormat(email string) bool {
