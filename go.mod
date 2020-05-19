@@ -5,9 +5,8 @@ go 1.13
 require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-xorm/xorm v0.7.9
-	github.com/hublabs/common v0.0.0-20200410041343-32308ad1a171
+	github.com/hublabs/common v0.0.0-20200517114719-fafc696cb4c2
 	github.com/labstack/echo v3.3.10+incompatible
-	github.com/limingxie/colleague-kit v0.0.0-20200220100822-dd7e1fd75307
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/pangpanglabs/goutils v0.0.0-20200116103626-3f9fcfaa29b0
 	github.com/sirupsen/logrus v1.4.2
