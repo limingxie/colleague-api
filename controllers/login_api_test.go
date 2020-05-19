@@ -48,7 +48,7 @@ func Test_LoginApiController_GetTokenDetail(t *testing.T) {
 }
 
 func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
-	req := httptest.NewRequest(echo.GET, "/v1/stores/authorization?colleagueId=1", nil)
+	req := httptest.NewRequest(echo.GET, "/v1/stores/authorization?colleagueId=1&tenantCode=hublabs", nil)
 
 	c, rec := SetContext(req)
 	dbSession := factory.DB(c.Request().Context())
@@ -72,18 +72,33 @@ func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 	test.Equals(t, v.Result["name"].(string), "xiao_ming")
 
 	stores := v.Result["stores"].([]interface{})
-	test.Equals(t, stores[0].(map[string]interface{})["id"].(float64), float64(1))
 	test.Equals(t, stores[0].(map[string]interface{})["code"].(string), "C001")
 	test.Equals(t, stores[0].(map[string]interface{})["name"].(string), "北京朝阳门店")
 	test.Equals(t, stores[0].(map[string]interface{})["role"].(string), "admin")
 
-	test.Equals(t, stores[1].(map[string]interface{})["id"].(float64), float64(2))
+	brands0 := stores[0].(map[string]interface{})["brands"].([]interface{})
+	test.Equals(t, brands0[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands0[0].(map[string]interface{})["code"].(string), "NK")
+	test.Equals(t, brands0[0].(map[string]interface{})["name"].(string), "Nike")
+	test.Equals(t, brands0[1].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands0[1].(map[string]interface{})["code"].(string), "AD")
+	test.Equals(t, brands0[1].(map[string]interface{})["name"].(string), "Adidas")
+
 	test.Equals(t, stores[1].(map[string]interface{})["code"].(string), "C002")
 	test.Equals(t, stores[1].(map[string]interface{})["name"].(string), "北京新世界百货店")
 	test.Equals(t, stores[1].(map[string]interface{})["role"].(string), "member")
 
-	test.Equals(t, stores[2].(map[string]interface{})["id"].(float64), float64(3))
+	brands1 := stores[1].(map[string]interface{})["brands"].([]interface{})
+	test.Equals(t, brands1[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands1[0].(map[string]interface{})["code"].(string), "NK")
+	test.Equals(t, brands1[0].(map[string]interface{})["name"].(string), "Nike")
+
 	test.Equals(t, stores[2].(map[string]interface{})["code"].(string), "C003")
 	test.Equals(t, stores[2].(map[string]interface{})["name"].(string), "上海西单店")
 	test.Equals(t, stores[2].(map[string]interface{})["role"].(string), "guest")
+
+	brands2 := stores[2].(map[string]interface{})["brands"].([]interface{})
+	test.Equals(t, brands2[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands2[0].(map[string]interface{})["code"].(string), "AD")
+	test.Equals(t, brands2[0].(map[string]interface{})["name"].(string), "Adidas")
 }

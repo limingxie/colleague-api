@@ -17,9 +17,16 @@ func Seed(xormEngine *xorm.Engine) error {
 		}
 
 		stores = []Store{
-			{Id: 1, Code: "C001", Name: "北京朝阳门店", Enable: true},
-			{Id: 2, Code: "C002", Name: "北京新世界百货店", Enable: true},
-			{Id: 3, Code: "C003", Name: "上海西单店", Enable: true},
+			{Id: 1, Code: "C001", Name: "北京朝阳门店", TenantCode: "hublabs", Enable: true},
+			{Id: 2, Code: "C002", Name: "北京新世界百货店", TenantCode: "hublabs", Enable: true},
+			{Id: 3, Code: "C003", Name: "上海西单店", TenantCode: "hublabs", Enable: true},
+		}
+
+		storeBrands = []StoreBrand{
+			{Id: 1, StoreId: 1, BrandCode: "NK", Enable: true},
+			{Id: 2, StoreId: 1, BrandCode: "AD", Enable: true},
+			{Id: 3, StoreId: 2, BrandCode: "NK", Enable: true},
+			{Id: 4, StoreId: 3, BrandCode: "AD", Enable: true},
 		}
 
 		storeColleagues = []StoreColleague{
@@ -38,6 +45,12 @@ func Seed(xormEngine *xorm.Engine) error {
 	}
 
 	for _, u := range stores {
+		if _, err := xormEngine.Insert(&u); err != nil {
+			return err
+		}
+	}
+
+	for _, u := range storeBrands {
 		if _, err := xormEngine.Insert(&u); err != nil {
 			return err
 		}

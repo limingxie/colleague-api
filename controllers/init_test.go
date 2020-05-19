@@ -43,6 +43,10 @@ func init() {
 		fmt.Println("seed err:", err)
 	}
 
+	if err := tenants.Seed(xormEngine); err != nil {
+		fmt.Println("seed err:", err)
+	}
+
 	echoApp = echo.New()
 	handleWithFilter = func(handlerFunc echo.HandlerFunc, c echo.Context) error {
 		return echomiddleware.ContextDB(configutil.Service, xormEngine, kafka.Config{})(handlerFunc)(c)
@@ -73,9 +77,11 @@ func SetContextWithSession(req *http.Request, session *xorm.Session) (echo.Conte
 func SetXormEngineSync(xormEngine *xorm.Engine) {
 	//xormEngine.ShowSQL(true)
 
+	xormEngine.Sync(new(tenants.Tenant))
 	xormEngine.Sync(new(tenants.Brand))
 
 	xormEngine.Sync(new(colleagues.Colleague))
 	xormEngine.Sync(new(colleagues.Store))
+	xormEngine.Sync(new(colleagues.StoreBrand))
 	xormEngine.Sync(new(colleagues.StoreColleague))
 }

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
+	"strings"
 
 	"github.com/hublabs/colleague-api/colleagues"
 	"github.com/hublabs/common/api"
@@ -40,20 +40,20 @@ func (c LoginApiController) GetTokenDetail(ctx echo.Context) error {
 }
 
 func (c LoginApiController) GetColleagueAndStores(ctx echo.Context) error {
-	var colleagueId int64
 	userClaim := auth.UserClaim{}.FromCtx(ctx.Request().Context())
-	if userClaim.ColleagueId != 0 {
-		colleagueId = userClaim.ColleagueId
-	} else {
-		var err error
-		colleagueId, err = strconv.ParseInt(ctx.QueryParams().Get("colleagueId"), 10, 64)
-		if err != nil || colleagueId == 0 {
-			return renderFail(ctx, api.ErrorParameter.New(err))
-		}
+
+	colleagueId := userClaim.ColleagueId
+	if userClaim.ColleagueId == 0 {
+		return renderFail(ctx, api.ErrorTokenInvaild.New(nil))
+	}
+
+	tenantCode := userClaim.TenantCode
+	if len(strings.TrimSpace(userClaim.TenantCode)) == 0 {
+		return renderFail(ctx, api.ErrorTokenInvaild.New(nil))
 	}
 
 	/*=======================> Main Function Colleague.Authentication <=======================*/
-	result, err := colleagues.Login{}.GetColleagueAndStores(ctx.Request().Context(), colleagueId)
+	result, err := colleagues.Login{}.GetColleagueAndStores(ctx.Request().Context(), tenantCode, colleagueId)
 	if err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
 	}

@@ -52,6 +52,9 @@ func main() {
 				if err := colleagues.Seed(xormEngine); err != nil {
 					return err
 				}
+				if err := tenants.Seed(xormEngine); err != nil {
+					return err
+				}
 				return nil
 			},
 		},
@@ -97,9 +100,11 @@ func InitControllers(e *echo.Echo) {
 func SetXormEngineSync(xormEngine *xorm.Engine) {
 	//xormEngine.ShowSQL(true)
 
+	xormEngine.Sync(new(tenants.Tenant))
 	xormEngine.Sync(new(tenants.Brand))
 
 	xormEngine.Sync(new(colleagues.Colleague))
-
 	xormEngine.Sync(new(colleagues.Store))
+	xormEngine.Sync(new(colleagues.StoreBrand))
+	xormEngine.Sync(new(colleagues.StoreColleague))
 }
