@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/hublabs/colleague-api/colleagues"
 	"github.com/hublabs/colleague-api/factory"
-	"github.com/hublabs/colleague-api/models"
 
 	"github.com/labstack/echo"
 	"github.com/pangpanglabs/goutils/test"
@@ -31,7 +31,7 @@ func Test_ColleagueApiController_GetColleagueById(t *testing.T) {
 	test.Equals(t, http.StatusOK, rec.Code)
 
 	var v struct {
-		Result  models.Colleague       `json:"result"`
+		Result  colleagues.Colleague   `json:"result"`
 		Success bool                   `json:"success"`
 		Errors  map[string]interface{} `json:"error"`
 	}

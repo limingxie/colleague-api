@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/hublabs/colleague-api/models"
+	"github.com/hublabs/colleague-api/colleagues"
 	"github.com/hublabs/common/api"
 
 	"github.com/labstack/echo"
@@ -24,7 +24,7 @@ func (c ColleagueApiController) GetColleagueById(ctx echo.Context) error {
 	}
 
 	/*=======================> Main Function GetColleagueById <=======================*/
-	result, err := models.Colleague{}.GetColleagueById(ctx.Request().Context(), colleagueId)
+	result, err := colleagues.Colleague{}.GetById(ctx.Request().Context(), colleagueId)
 	if err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
 	}

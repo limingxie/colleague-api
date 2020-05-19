@@ -10,6 +10,7 @@ import (
 	"runtime"
 
 	configutil "github.com/hublabs/colleague-api/config"
+	"github.com/hublabs/colleague-api/tenants"
 
 	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
@@ -17,7 +18,7 @@ import (
 	"github.com/pangpanglabs/goutils/echomiddleware"
 	"github.com/pangpanglabs/goutils/kafka"
 
-	"github.com/hublabs/colleague-api/models"
+	"github.com/hublabs/colleague-api/colleagues"
 )
 
 var (
@@ -37,8 +38,8 @@ func init() {
 		panic(err)
 	}
 
-	models.SetXormEngineSync(xormEngine)
-	if err := models.Seed(xormEngine); err != nil {
+	SetXormEngineSync(xormEngine)
+	if err := colleagues.Seed(xormEngine); err != nil {
 		fmt.Println("seed err:", err)
 	}
 
@@ -67,4 +68,14 @@ func SetContextWithSession(req *http.Request, session *xorm.Session) (echo.Conte
 	c.SetRequest(req.WithContext(context.WithValue(req.Context(), echomiddleware.ContextDBName, session)))
 
 	return c, rec
+}
+
+func SetXormEngineSync(xormEngine *xorm.Engine) {
+	//xormEngine.ShowSQL(true)
+
+	xormEngine.Sync(new(tenants.Brand))
+
+	xormEngine.Sync(new(colleagues.Colleague))
+	xormEngine.Sync(new(colleagues.Store))
+	xormEngine.Sync(new(colleagues.StoreColleague))
 }
