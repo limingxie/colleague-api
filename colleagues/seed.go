@@ -17,7 +17,7 @@ func Seed(xormEngine *xorm.Engine) error {
 		}
 
 		stores = []Store{
-			{Id: 1, Code: "C001", Name: "北京朝阳门店", TenantCode: "hublabs", Enable: true},
+			{Id: 1, Code: "C001", Name: "北京朝阳门店", TenantCode: "hublabs", Province: "北京市", City: "北京市", District: "朝阳区", Detail: "酒仙桥中路恒通商务园B37", Enable: true},
 			{Id: 2, Code: "C002", Name: "北京新世界百货店", TenantCode: "hublabs", Enable: true},
 			{Id: 3, Code: "C003", Name: "上海西单店", TenantCode: "hublabs", Enable: true},
 		}
