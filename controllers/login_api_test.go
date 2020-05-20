@@ -50,7 +50,7 @@ func Test_LoginApiController_GetTokenDetail(t *testing.T) {
 func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/v1/stores/authorization?colleagueId=1&tenantCode=hublabs", nil)
 
-	c, rec := SetContext(req)
+	c, rec := SetContextWithToken(req, "")
 	dbSession := factory.DB(c.Request().Context())
 	dbSession.Begin()
 	defer func() {

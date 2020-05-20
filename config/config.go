@@ -2,44 +2,46 @@ package config
 
 import (
 	"os"
+
+	configutil "github.com/pangpanglabs/goutils/config"
+	"github.com/pangpanglabs/goutils/echomiddleware"
+	"github.com/pangpanglabs/goutils/jwtutil"
+	"github.com/sirupsen/logrus"
 )
 
-var (
-	AppEnv                 string
-	Httpport               string
-	Service                string
-	DataBaseDriver         string
-	ColleagueApiConnection string
-)
+var config C
 
-func Read() {
-	if appEnv := os.Getenv("APP_ENV"); appEnv == "" {
-		AppEnv = "test"
-	} else {
-		AppEnv = appEnv
+func Init(appEnv string, options ...func(*C)) C {
+	if err := configutil.Read(appEnv, &config); err != nil {
+		logrus.WithError(err).Warn("Fail to load config file")
 	}
-	if httpport := os.Getenv("HTTP_PORT"); httpport == "" {
-		Httpport = "8001"
-	} else {
-		Httpport = httpport
+
+	if s := os.Getenv("JWT_SECRET"); s != "" {
+		config.JwtSecret = s
+		jwtutil.SetJwtSecret(s)
 	}
-	if dataBaseDriver := os.Getenv("DATABASE_DRIVER"); dataBaseDriver == "" {
-		DataBaseDriver = "sqlite3"
-	} else {
-		DataBaseDriver = dataBaseDriver
+
+	for _, option := range options {
+		option(&config)
 	}
-	if colleagueApiConnection := os.Getenv("COLLEAGUE_API_CONNECTION"); colleagueApiConnection == "" {
-		ColleagueApiConnection = ":memory:"
-	} else {
-		ColleagueApiConnection = colleagueApiConnection
-	}
-	Service = "colleague-api"
+
+	return config
 }
 
-func ReadForTest() {
-	AppEnv = "test"
-	Httpport = "8001"
-	Service = "colleague-api"
-	DataBaseDriver = "sqlite3"
-	ColleagueApiConnection = ":memory:"
+func Config() C {
+	return config
+}
+
+type C struct {
+	Database struct {
+		Driver     string
+		Connection string
+	}
+	BehaviorLog struct {
+		Kafka echomiddleware.KafkaConfig
+	}
+	AppEnv      string
+	JwtSecret   string
+	HttpPort    string
+	ServiceName string
 }

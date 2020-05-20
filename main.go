@@ -1,9 +1,16 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"sort"
 	"time"
+
+	"github.com/hublabs/colleague-api/colleagues"
+	"github.com/hublabs/colleague-api/config"
+	"github.com/hublabs/colleague-api/controllers"
+	"github.com/hublabs/colleague-api/tenants"
+	"github.com/hublabs/common/api"
 
 	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
@@ -14,17 +21,21 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
+)
 
-	"github.com/hublabs/colleague-api/colleagues"
-	configutil "github.com/hublabs/colleague-api/config"
-	"github.com/hublabs/colleague-api/controllers"
-	"github.com/hublabs/colleague-api/tenants"
+var (
+	appEnv = flag.String("app-env", os.Getenv("APP_ENV"), "app env")
 )
 
 func main() {
-	configutil.Read()
+	c := config.Init(*appEnv)
+	api.SetErrorMessagePrefix(c.ServiceName)
 
-	xormEngine, err := xorm.NewEngine(configutil.DataBaseDriver, configutil.ColleagueApiConnection)
+	colleagues.SetColleagueConfig(&colleagues.ColleagueConfig{
+		AppEnv: *appEnv,
+	})
+
+	xormEngine, err := xorm.NewEngine(c.Database.Driver, c.Database.Connection)
 	if err != nil {
 		panic(err)
 	}
@@ -38,8 +49,8 @@ func main() {
 		{
 			Name:  "api-server",
 			Usage: "run api server",
-			Action: func(c *cli.Context) error {
-				if err := initEchoApp(xormEngine).Start(":" + configutil.Httpport); err != nil {
+			Action: func(cliContext *cli.Context) error {
+				if err := initEchoApp(xormEngine, c.ServiceName).Start(":" + c.HttpPort); err != nil {
 					return err
 				}
 				return nil
@@ -67,7 +78,7 @@ func main() {
 
 }
 
-func initEchoApp(xormEngine *xorm.Engine) *echo.Echo {
+func initEchoApp(xormEngine *xorm.Engine, serviceName string) *echo.Echo {
 	xormEngine.SetMaxOpenConns(50)
 	xormEngine.SetMaxIdleConns(50)
 	xormEngine.SetConnMaxLifetime(60 * time.Second)
@@ -83,7 +94,7 @@ func initEchoApp(xormEngine *xorm.Engine) *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
 
-	e.Use(echomiddleware.ContextDB(configutil.Service, xormEngine, kafka.Config{}))
+	e.Use(echomiddleware.ContextDB(serviceName, xormEngine, kafka.Config{}))
 
 	// 초기에 token 인증을 처리하지 않고 후에는 처리 되여야 함.
 	// e.Use(auth.UserClaimMiddelware())
