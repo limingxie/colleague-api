@@ -119,6 +119,7 @@ func (Login) GetColleagueAndStores(ctx context.Context, tenantCode string, colle
 	result["tenantCode"] = tenantCode
 	result["id"] = colleague.Id
 	result["name"] = colleague.Name
+	result["username"] = colleague.Username
 	result["stores"] = stores
 
 	return result, nil

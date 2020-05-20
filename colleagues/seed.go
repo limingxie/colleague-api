@@ -9,7 +9,7 @@ func Seed(xormEngine *xorm.Engine) error {
 
 	var (
 		colleagues = []Colleague{
-			{Id: 1, Name: "xiao_ming", Email: "xiao_ming@email.com", Password: "1111", Enable: true},
+			{Id: 1, Username: "system", Name: "系统管理员", Email: "system@email.com", Password: "1111", Enable: true},
 			{Id: 2, Name: "xiao_zhang", Enable: true},
 			{Id: 3, Name: "lao_li", Enable: true},
 			{Id: 4, Name: "lao_wang", Enable: false},

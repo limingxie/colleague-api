@@ -17,7 +17,7 @@ func Test_LoginApiController_GetTokenDetail(t *testing.T) {
 
 	param := map[string]interface{}{
 		"mode":      "email",
-		"identiKey": "xiao_ming@email.com",
+		"identiKey": "system@email.com",
 		"password":  "1111",
 	}
 
@@ -69,7 +69,8 @@ func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 
 	test.Ok(t, json.Unmarshal(rec.Body.Bytes(), &v))
 	test.Equals(t, v.Result["id"].(float64), float64(1))
-	test.Equals(t, v.Result["name"].(string), "xiao_ming")
+	test.Equals(t, v.Result["name"].(string), "系统管理员")
+	test.Equals(t, v.Result["username"].(string), "system")
 
 	stores := v.Result["stores"].([]interface{})
 	test.Equals(t, stores[0].(map[string]interface{})["code"].(string), "C001")

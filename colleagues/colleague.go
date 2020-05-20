@@ -14,6 +14,7 @@ type Colleague struct {
 	Email     string          `json:"email"`
 	Mobile    string          `json:"mobile"`
 	Password  string          `json:"password"`
+	Username  string          `json:"username"`
 	Enable    bool            `json:"enable"`
 	CreatedAt time.Time       `json:"-" xorm:"created"`
 	UpdatedAt time.Time       `json:"-" xorm:"updated"`

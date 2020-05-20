@@ -38,5 +38,5 @@ func Test_ColleagueApiController_GetColleagueById(t *testing.T) {
 
 	test.Ok(t, json.Unmarshal(rec.Body.Bytes(), &v))
 	test.Equals(t, v.Result.Id, int64(1))
-	test.Equals(t, v.Result.Name, "xiao_ming")
+	test.Equals(t, v.Result.Name, "系统管理员")
 }
