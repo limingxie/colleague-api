@@ -1,0 +1,11 @@
+database:
+  driver: sqlite3
+  connection: colleague.db
+behaviorLog:
+  kafka:
+    brokers:
+      - 127.0.0.1:9092
+    topic: behaviorlog
+debug: true
+serviceName: product-api
+httpPort:     8001
