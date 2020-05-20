@@ -4,6 +4,16 @@ import (
 	"regexp"
 )
 
+type ColleagueConfig struct {
+	AppEnv string
+}
+
+var colleagueConfig *ColleagueConfig
+
+func SetColleagueConfig(c *ColleagueConfig) {
+	colleagueConfig = c
+}
+
 //email verify
 func VerifyEmailFormat(email string) bool {
 	//pattern := `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*` //匹配电子邮箱
