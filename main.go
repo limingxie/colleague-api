@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"log"
 	"os"
 	"sort"
 	"time"
@@ -9,6 +11,7 @@ import (
 	"github.com/hublabs/colleague-api/colleagues"
 	"github.com/hublabs/colleague-api/config"
 	"github.com/hublabs/colleague-api/controllers"
+	"github.com/hublabs/colleague-api/factory"
 	"github.com/hublabs/colleague-api/tenants"
 	"github.com/hublabs/common/api"
 
@@ -29,19 +32,19 @@ var (
 
 func main() {
 	c := config.Init(*appEnv)
+	fmt.Println("----------appEnv---------------")
+	fmt.Println(*appEnv)
+	fmt.Println("-----------appEnv--------------")
 	api.SetErrorMessagePrefix(c.ServiceName)
 
 	colleagues.SetColleagueConfig(&colleagues.ColleagueConfig{
 		AppEnv: *appEnv,
 	})
 
-	xormEngine, err := xorm.NewEngine(c.Database.Driver, c.Database.Connection)
-	if err != nil {
-		panic(err)
-	}
+	xormEngine := initXormEngine(c.Database.Driver, c.Database.Connection)
+	factory.InitDB(xormEngine)
 
 	defer xormEngine.Close()
-	SetXormEngineSync(xormEngine)
 
 	app := cli.NewApp()
 	app.Name = "colleague"
@@ -79,9 +82,6 @@ func main() {
 }
 
 func initEchoApp(xormEngine *xorm.Engine, serviceName string) *echo.Echo {
-	xormEngine.SetMaxOpenConns(50)
-	xormEngine.SetMaxIdleConns(50)
-	xormEngine.SetConnMaxLifetime(60 * time.Second)
 
 	e := echo.New()
 
@@ -106,16 +106,31 @@ func InitControllers(e *echo.Echo) {
 	controllers.HomeApiController{}.Init(e)
 	controllers.ColleagueApiController{}.Init(e)
 	controllers.LoginApiController{}.Init(e)
+	controllers.MigrationController{}.Init(e)
 }
 
-func SetXormEngineSync(xormEngine *xorm.Engine) {
-	//xormEngine.ShowSQL(true)
+func initXormEngine(driver, connection string) *xorm.Engine {
+	fmt.Println("-------------------------")
+	fmt.Println(driver)
+	fmt.Println(connection)
+	fmt.Println("-------------------------")
 
-	xormEngine.Sync(new(tenants.Tenant))
-	xormEngine.Sync(new(tenants.Brand))
+	xormEngine, err := xorm.NewEngine(driver, connection)
+	if err != nil {
+		panic(err)
+	}
+	xormEngine.SetMaxIdleConns(5)
+	xormEngine.SetMaxOpenConns(20)
+	xormEngine.SetConnMaxLifetime(time.Minute * 10)
+	//xormEngine.ShowSQL()
 
-	xormEngine.Sync(new(colleagues.Colleague))
-	xormEngine.Sync(new(colleagues.Store))
-	xormEngine.Sync(new(colleagues.StoreBrand))
-	xormEngine.Sync(new(colleagues.StoreColleague))
+	if err := tenants.Init(xormEngine); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := colleagues.Init(xormEngine); err != nil {
+		log.Fatal(err)
+	}
+
+	return xormEngine
 }

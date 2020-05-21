@@ -1,11 +1,15 @@
 database:
-  driver: sqlite3
-  connection: colleague.db
-behaviorLog:
-  kafka:
+  driver: mysql
+  connection: hublabs_app:1234@tcp(127.0.0.1:3306)/hublabs_colleague?charset
+  logger:
+    kafka:
+      brokers:
+        - 127.0.0.1:9092
+      topic: sqllog
+kafka:
+  behaviorLog:
     brokers:
       - 127.0.0.1:9092
     topic: behaviorlog
-debug: true
-serviceName: product-api
-httpPort:     8001
+httpPort: 8001
+serviceName: colleague-api
