@@ -5,6 +5,26 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+func Init(xormEngine *xorm.Engine) error {
+	return xormEngine.Sync(
+		new(Colleague),
+		new(Store),
+		new(StoreBrand),
+		new(StoreColleague),
+	)
+	//xormEngine.ShowSQL(true)
+
+}
+
+func DropTables(xormEngine *xorm.Engine) error {
+	return xormEngine.DropTables(
+		new(Colleague),
+		new(Store),
+		new(StoreBrand),
+		new(StoreColleague),
+	)
+}
+
 func Seed(xormEngine *xorm.Engine) error {
 
 	var (

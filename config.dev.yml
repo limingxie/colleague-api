@@ -1,12 +1,15 @@
 database:
-    driver: mysql
-    connection: root:1234@tcp(127.0.0.1:33306)/hublabs_colleague?charset=utf8&parseTime=True&loc=Local
-  behaviorLog:
+  driver: mysql
+  connection: hublabs_app:1234@tcp(127.0.0.1:3306)/hublabs_colleague?charset
+  logger:
     kafka:
       brokers:
         - 127.0.0.1:9092
-      topic: behaviorlog
-  debug: true
-  serviceName: colleague-api
-  httpPort:     8001
-  
+      topic: sqllog
+kafka:
+  behaviorLog:
+    brokers:
+      - 127.0.0.1:9092
+    topic: behaviorlog
+httpPort: 8001
+serviceName: colleague-api

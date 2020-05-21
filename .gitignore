@@ -8,3 +8,4 @@ debug
 *.prof
 colleague-api
 colleague-api.exe
+config.dev.yml
