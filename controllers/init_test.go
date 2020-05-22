@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hublabs/colleague-api/factory"
 	"github.com/hublabs/colleague-api/tenants"
 	"github.com/hublabs/common/auth"
 
@@ -39,12 +41,19 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	// xormEngine.ShowSQL(true)
+	factory.InitDB(xormEngine)
+	if err := tenants.Init(xormEngine); err != nil {
+		log.Fatal(err)
+	}
 
+	if err := colleagues.Init(xormEngine); err != nil {
+		log.Fatal(err)
+	}
 	colleagues.SetColleagueConfig(&colleagues.ColleagueConfig{
 		AppEnv: "test",
 	})
 
-	SetXormEngineSync(xormEngine)
 	if err := colleagues.Seed(xormEngine); err != nil {
 		fmt.Println("seed err:", err)
 	}
