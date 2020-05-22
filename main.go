@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"sort"
@@ -32,9 +31,6 @@ var (
 
 func main() {
 	c := config.Init(*appEnv)
-	fmt.Println("----------appEnv---------------")
-	fmt.Println(*appEnv)
-	fmt.Println("-----------appEnv--------------")
 	api.SetErrorMessagePrefix(c.ServiceName)
 
 	colleagues.SetColleagueConfig(&colleagues.ColleagueConfig{
@@ -110,11 +106,6 @@ func InitControllers(e *echo.Echo) {
 }
 
 func initXormEngine(driver, connection string) *xorm.Engine {
-	fmt.Println("-------------------------")
-	fmt.Println(driver)
-	fmt.Println(connection)
-	fmt.Println("-------------------------")
-
 	xormEngine, err := xorm.NewEngine(driver, connection)
 	if err != nil {
 		panic(err)
