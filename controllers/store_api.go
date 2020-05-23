@@ -15,20 +15,20 @@ type StoreApiController struct {
 }
 
 func (c StoreApiController) Init(g *echo.Echo) {
-	g.GET("/v1/store/:storeId/address", c.GetStoreAddressById)
+	g.GET("/v1/store/:id", c.GetStoreAndBrandsByStoreId)
 	g.POST("/v1/store", c.PostStore)
 	g.PUT("/v1/store", c.PutStore)
 	g.DELETE("/v1/stores/:id", c.DeleteStore)
 }
 
-func (c StoreApiController) GetStoreAddressById(ctx echo.Context) error {
-	storeId, err := strconv.ParseInt(ctx.Param("storeId"), 10, 64)
+func (c StoreApiController) GetStoreAndBrandsByStoreId(ctx echo.Context) error {
+	storeId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil || storeId == 0 {
 		return renderFail(ctx, api.ErrorParameter.New(err))
 	}
 
 	/*=======================> Main Function Colleague.Authentication <=======================*/
-	result, err := colleagues.Store{}.GetStoreAddressById(ctx.Request().Context(), storeId)
+	result, err := colleagues.Store{}.GetStoreAndBrandsByStoreId(ctx.Request().Context(), storeId)
 	if err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
 	}

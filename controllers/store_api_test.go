@@ -15,8 +15,8 @@ import (
 	"github.com/pangpanglabs/goutils/test"
 )
 
-func Test_StoreApiController_GetStoreAddressById(t *testing.T) {
-	req := httptest.NewRequest(echo.GET, "/v1/store/:storeId/address", nil)
+func Test_StoreApiController_GetStoreAndBrandsByStoreId(t *testing.T) {
+	req := httptest.NewRequest(echo.GET, "/v1/store/:id", nil)
 
 	c, rec := SetContext(req)
 	dbSession := factory.DB(c.Request().Context())
@@ -26,24 +26,32 @@ func Test_StoreApiController_GetStoreAddressById(t *testing.T) {
 		factory.DB(c.Request().Context()).Rollback()
 	}()
 
-	c.SetParamNames("storeId")
+	c.SetParamNames("id")
 	c.SetParamValues("1")
 
-	test.Ok(t, StoreApiController{}.GetStoreAddressById(c))
+	test.Ok(t, StoreApiController{}.GetStoreAndBrandsByStoreId(c))
 	test.Equals(t, http.StatusOK, rec.Code)
 
 	var v struct {
-		Result  map[string]interface{} `json:"result"`
+		Result  colleagues.Store       `json:"result"`
 		Success bool                   `json:"success"`
 		Errors  map[string]interface{} `json:"error"`
 	}
 
 	test.Ok(t, json.Unmarshal(rec.Body.Bytes(), &v))
-	test.Equals(t, v.Result["id"].(float64), float64(1))
-	test.Equals(t, v.Result["province"].(string), "北京市")
-	test.Equals(t, v.Result["city"].(string), "北京市")
-	test.Equals(t, v.Result["district"].(string), "朝阳区")
-	test.Equals(t, v.Result["detail"].(string), "酒仙桥中路恒通商务园B37")
+	test.Equals(t, v.Result.Id, int64(1))
+	test.Equals(t, v.Result.TenantCode, "hublabs")
+	test.Equals(t, v.Result.Code, "C001")
+	test.Equals(t, v.Result.Name, "北京朝阳门店")
+	test.Equals(t, v.Result.Province, "北京市")
+	test.Equals(t, v.Result.City, "北京市")
+	test.Equals(t, v.Result.District, "朝阳区")
+	test.Equals(t, v.Result.Detail, "酒仙桥中路恒通商务园B37")
+	test.Equals(t, v.Result.Brands[0].Code, "NK")
+	test.Equals(t, v.Result.Brands[0].Name, "Nike")
+	test.Equals(t, v.Result.Brands[1].Code, "AD")
+	test.Equals(t, v.Result.Brands[1].Name, "Adidas")
+
 }
 
 func Test_StoreApiController_PostStore(t *testing.T) {
