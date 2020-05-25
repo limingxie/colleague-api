@@ -27,7 +27,7 @@ func (c StoreApiController) GetStoreAndBrandsByStoreId(ctx echo.Context) error {
 		return renderFail(ctx, api.ErrorParameter.New(err))
 	}
 
-	/*=======================> Main Function Colleague.Authentication <=======================*/
+	/*=======================> Main Function GetStoreAndBrandsByStoreId <=======================*/
 	result, err := colleagues.Store{}.GetStoreAndBrandsByStoreId(ctx.Request().Context(), storeId)
 	if err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
@@ -94,7 +94,7 @@ func (c StoreApiController) DeleteStore(ctx echo.Context) error {
 		return renderFail(ctx, api.ErrorTokenInvaild.New(nil))
 	}
 
-	/*=======================> Main Function store.UpdateStore <=======================*/
+	/*=======================> Main Function store.DeleteStore <=======================*/
 	if err := (colleagues.Store{}).DeleteStore(ctx.Request().Context(), tenantCode, storeId); err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
 	}

@@ -13,6 +13,7 @@ import (
 	"github.com/hublabs/colleague-api/factory"
 	"github.com/hublabs/colleague-api/tenants"
 	"github.com/hublabs/common/api"
+	"github.com/hublabs/common/auth"
 
 	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
@@ -87,10 +88,12 @@ func initEchoApp(xormEngine *xorm.Engine, serviceName string) *echo.Echo {
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
+	//e.Use(echomiddleware.BehaviorLogger(c.ServiceName, c.BehaviorLog.Kafka))
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
 
 	e.Use(echomiddleware.ContextDB(serviceName, xormEngine, kafka.Config{}))
+	e.Use(auth.UserClaimMiddleware("/ping", "/doc"))
 
 	// 초기에 token 인증을 처리하지 않고 후에는 처리 되여야 함.
 	// e.Use(auth.UserClaimMiddelware())
@@ -102,6 +105,7 @@ func InitControllers(e *echo.Echo) {
 	controllers.HomeApiController{}.Init(e)
 	controllers.ColleagueApiController{}.Init(e)
 	controllers.LoginApiController{}.Init(e)
+	controllers.StoreApiController{}.Init(e)
 	controllers.MigrationController{}.Init(e)
 }
 
