@@ -22,10 +22,11 @@ type Store struct {
 	Enable     bool            `json:"enable"`
 	CreatedAt  time.Time       `json:"-" xorm:"created"`
 	UpdatedAt  time.Time       `json:"-" xorm:"updated"`
-	Brands     []tenants.Brand `json:"-" xorm:"-"`
+	Brands     []tenants.Brand `json:"brands" xorm:"-"`
 }
 
 type StoreJsonView struct {
+	Id     int64           `json:"id"`
 	Code   string          `json:"code"`
 	Name   string          `json:"name"`
 	Role   string          `json:"role"`
@@ -104,6 +105,25 @@ func (Store) GetStoreAddressById(ctx context.Context, storeId int64) (map[string
 		"district": store.District,
 		"detail":   store.Detail,
 	}, nil
+}
+
+func (Store) GetStoreAndBrandsByStoreId(ctx context.Context, storeId int64) (Store, error) {
+	var store Store
+	if _, err := factory.DB(ctx).
+		Where("store.id = ? ", storeId).
+		And("store.enable = ? ", true).
+		Get(&store); err != nil {
+		return Store{}, err
+	}
+
+	brands, err := Store{}.GetBrandsByStoreId(ctx, store.Id)
+	if err != nil {
+		return Store{}, err
+	}
+
+	store.Brands = brands
+
+	return store, nil
 }
 
 func (Store) GetStoreByCode(ctx context.Context, tenantCode, storeCode string) (Store, error) {

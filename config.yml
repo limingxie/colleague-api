@@ -1,6 +1,6 @@
 database:
   driver: mysql
-  connection: hublabs_app:1234@tcp(127.0.0.1:3306)/hublabs_colleague?charset
+  connection: root:1234@tcp(127.0.0.1:33306)/hublabs_colleague?charset
   logger:
     kafka:
       brokers:

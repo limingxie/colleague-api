@@ -41,7 +41,6 @@ func (c LoginApiController) GetTokenDetail(ctx echo.Context) error {
 
 func (c LoginApiController) GetColleagueAndStores(ctx echo.Context) error {
 	userClaim := auth.UserClaim{}.FromCtx(ctx.Request().Context())
-
 	colleagueId := userClaim.ColleagueId
 	if userClaim.ColleagueId == 0 {
 		return renderFail(ctx, api.ErrorTokenInvaild.New(nil))

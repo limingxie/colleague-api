@@ -44,7 +44,7 @@ func (colleague *Colleague) loadStoreAndRoles(ctx context.Context, tenantCode st
 
 	if len(storeJsonViews) > 0 {
 		for i := range storeJsonViews {
-			brands, err := storeJsonViews[i].GetBrands(ctx, tenantCode)
+			brands, err := Store{}.GetBrandsByStoreId(ctx, storeJsonViews[i].Id)
 			if err != nil {
 				return err
 			}
