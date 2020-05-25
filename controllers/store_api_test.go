@@ -27,7 +27,7 @@ func Test_StoreApiController_GetStoreAndBrandsByStoreId(t *testing.T) {
 	}()
 
 	c.SetParamNames("id")
-	c.SetParamValues("1")
+	c.SetParamValues("3")
 
 	test.Ok(t, StoreApiController{}.GetStoreAndBrandsByStoreId(c))
 	test.Equals(t, http.StatusOK, rec.Code)
@@ -39,14 +39,16 @@ func Test_StoreApiController_GetStoreAndBrandsByStoreId(t *testing.T) {
 	}
 
 	test.Ok(t, json.Unmarshal(rec.Body.Bytes(), &v))
-	test.Equals(t, v.Result.Id, int64(1))
+	test.Equals(t, v.Result.Id, int64(3))
 	test.Equals(t, v.Result.TenantCode, "hublabs")
-	test.Equals(t, v.Result.Code, "C001")
-	test.Equals(t, v.Result.Name, "北京朝阳门店")
-	test.Equals(t, v.Result.Province, "北京市")
-	test.Equals(t, v.Result.City, "北京市")
-	test.Equals(t, v.Result.District, "朝阳区")
-	test.Equals(t, v.Result.Detail, "酒仙桥中路恒通商务园B37")
+	test.Equals(t, v.Result.Code, "C003")
+	test.Equals(t, v.Result.Name, "上海运动专卖店")
+	test.Equals(t, v.Result.AddrProvince, "上海市")
+	test.Equals(t, v.Result.AddrCity, "上海市")
+	test.Equals(t, v.Result.AddrDistrict, "浦东区")
+	test.Equals(t, v.Result.AddrDetail, "漕宝路23号")
+	test.Equals(t, v.Result.Mobile, "15031056672")
+	test.Equals(t, v.Result.Tel, "3333333330")
 	test.Equals(t, v.Result.Brands[0].Code, "NK")
 	test.Equals(t, v.Result.Brands[0].Name, "Nike")
 	test.Equals(t, v.Result.Brands[1].Code, "AD")
@@ -56,14 +58,16 @@ func Test_StoreApiController_GetStoreAndBrandsByStoreId(t *testing.T) {
 
 func Test_StoreApiController_PostStore(t *testing.T) {
 	param := map[string]interface{}{
-		"tenantCode": "hublabs",
-		"code":       "A001",
-		"name":       "测试A卖场",
-		"province":   "河北省",
-		"city":       "石家庄",
-		"district":   "朝阳区",
-		"detail":     "恒通商务园B37",
-		"enable":     true,
+		"tenantCode":   "hublabs",
+		"code":         "A001",
+		"name":         "测试A卖场",
+		"addrProvince": "河北省",
+		"addrCity":     "石家庄",
+		"addrDistrict": "朝阳区",
+		"addrDetail":   "恒通商务园B37",
+		"mobile":       "111",
+		"tel":          "222",
+		"enable":       true,
 	}
 
 	body, err := json.Marshal(param)
@@ -104,24 +108,28 @@ func Test_StoreApiController_PostStore(t *testing.T) {
 	test.Equals(t, store.TenantCode, "hublabs")
 	test.Equals(t, store.Code, "A001")
 	test.Equals(t, store.Name, "测试A卖场")
-	test.Equals(t, store.Province, "河北省")
-	test.Equals(t, store.City, "石家庄")
-	test.Equals(t, store.District, "朝阳区")
-	test.Equals(t, store.Detail, "恒通商务园B37")
+	test.Equals(t, store.AddrProvince, "河北省")
+	test.Equals(t, store.AddrCity, "石家庄")
+	test.Equals(t, store.AddrDistrict, "朝阳区")
+	test.Equals(t, store.AddrDetail, "恒通商务园B37")
+	test.Equals(t, store.Mobile, "111")
+	test.Equals(t, store.Tel, "222")
 	test.Equals(t, store.Enable, true)
 
 }
 
 func Test_StoreApiController_PutStore(t *testing.T) {
 	param := map[string]interface{}{
-		"id":         int64(3),
-		"tenantCode": "hublabs",
-		"name":       "测试A卖场",
-		"province":   "河北省",
-		"city":       "石家庄",
-		"district":   "朝阳区",
-		"detail":     "恒通商务园B37",
-		"enable":     true,
+		"id":           int64(3),
+		"tenantCode":   "hublabs",
+		"name":         "测试A卖场",
+		"addrProvince": "河北省",
+		"addrCity":     "石家庄",
+		"addrDistrict": "朝阳区",
+		"addrDetail":   "恒通商务园B37",
+		"mobile":       "111",
+		"tel":          "222",
+		"enable":       true,
 	}
 
 	body, err := json.Marshal(param)
@@ -154,10 +162,12 @@ func Test_StoreApiController_PutStore(t *testing.T) {
 
 	test.Equals(t, store.TenantCode, "hublabs")
 	test.Equals(t, store.Name, "测试A卖场")
-	test.Equals(t, store.Province, "河北省")
-	test.Equals(t, store.City, "石家庄")
-	test.Equals(t, store.District, "朝阳区")
-	test.Equals(t, store.Detail, "恒通商务园B37")
+	test.Equals(t, store.AddrProvince, "河北省")
+	test.Equals(t, store.AddrCity, "石家庄")
+	test.Equals(t, store.AddrDistrict, "朝阳区")
+	test.Equals(t, store.AddrDetail, "恒通商务园B37")
+	test.Equals(t, store.Mobile, "111")
+	test.Equals(t, store.Tel, "222")
 	test.Equals(t, store.Enable, true)
 }
 
