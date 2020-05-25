@@ -74,32 +74,34 @@ func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 
 	stores := v.Result["stores"].([]interface{})
 	test.Equals(t, stores[0].(map[string]interface{})["code"].(string), "C001")
-	test.Equals(t, stores[0].(map[string]interface{})["name"].(string), "北京朝阳门店")
+	test.Equals(t, stores[0].(map[string]interface{})["name"].(string), "北京Nike店")
 	test.Equals(t, stores[0].(map[string]interface{})["role"].(string), "admin")
 
 	brands0 := stores[0].(map[string]interface{})["brands"].([]interface{})
 	test.Equals(t, brands0[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
 	test.Equals(t, brands0[0].(map[string]interface{})["code"].(string), "NK")
 	test.Equals(t, brands0[0].(map[string]interface{})["name"].(string), "Nike")
-	test.Equals(t, brands0[1].(map[string]interface{})["tenantCode"].(string), "hublabs")
-	test.Equals(t, brands0[1].(map[string]interface{})["code"].(string), "AD")
-	test.Equals(t, brands0[1].(map[string]interface{})["name"].(string), "Adidas")
 
 	test.Equals(t, stores[1].(map[string]interface{})["code"].(string), "C002")
-	test.Equals(t, stores[1].(map[string]interface{})["name"].(string), "北京新世界百货店")
-	test.Equals(t, stores[1].(map[string]interface{})["role"].(string), "member")
+	test.Equals(t, stores[1].(map[string]interface{})["name"].(string), "北京Adidas店")
+	test.Equals(t, stores[1].(map[string]interface{})["role"].(string), "admin")
 
 	brands1 := stores[1].(map[string]interface{})["brands"].([]interface{})
 	test.Equals(t, brands1[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
-	test.Equals(t, brands1[0].(map[string]interface{})["code"].(string), "NK")
-	test.Equals(t, brands1[0].(map[string]interface{})["name"].(string), "Nike")
+	test.Equals(t, brands1[0].(map[string]interface{})["code"].(string), "AD")
+	test.Equals(t, brands1[0].(map[string]interface{})["name"].(string), "Adidas")
 
 	test.Equals(t, stores[2].(map[string]interface{})["code"].(string), "C003")
-	test.Equals(t, stores[2].(map[string]interface{})["name"].(string), "上海西单店")
-	test.Equals(t, stores[2].(map[string]interface{})["role"].(string), "guest")
+	test.Equals(t, stores[2].(map[string]interface{})["name"].(string), "上海运动专卖店")
+	test.Equals(t, stores[2].(map[string]interface{})["role"].(string), "admin")
 
-	brands2 := stores[2].(map[string]interface{})["brands"].([]interface{})
-	test.Equals(t, brands2[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
-	test.Equals(t, brands2[0].(map[string]interface{})["code"].(string), "AD")
-	test.Equals(t, brands2[0].(map[string]interface{})["name"].(string), "Adidas")
+	brands20 := stores[2].(map[string]interface{})["brands"].([]interface{})
+	test.Equals(t, brands20[0].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands20[0].(map[string]interface{})["code"].(string), "NK")
+	test.Equals(t, brands20[0].(map[string]interface{})["name"].(string), "Nike")
+
+	brands21 := stores[2].(map[string]interface{})["brands"].([]interface{})
+	test.Equals(t, brands21[1].(map[string]interface{})["tenantCode"].(string), "hublabs")
+	test.Equals(t, brands21[1].(map[string]interface{})["code"].(string), "AD")
+	test.Equals(t, brands21[1].(map[string]interface{})["name"].(string), "Adidas")
 }
