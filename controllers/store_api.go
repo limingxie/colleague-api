@@ -15,9 +15,9 @@ type StoreApiController struct {
 }
 
 func (c StoreApiController) Init(g *echo.Echo) {
-	g.GET("/v1/store/:id", c.GetStoreAndBrandsByStoreId)
-	g.POST("/v1/store", c.PostStore)
-	g.PUT("/v1/store", c.PutStore)
+	g.GET("/v1/stores/:id", c.GetStoreAndBrandsByStoreId)
+	g.POST("/v1/stores", c.PostStore)
+	g.PUT("/v1/stores", c.PutStore)
 	g.DELETE("/v1/stores/:id", c.DeleteStore)
 }
 

@@ -16,7 +16,7 @@ import (
 )
 
 func Test_StoreApiController_GetStoreAndBrandsByStoreId(t *testing.T) {
-	req := httptest.NewRequest(echo.GET, "/v1/store/:id", nil)
+	req := httptest.NewRequest(echo.GET, "/v1/stores/:id", nil)
 
 	c, rec := SetContext(req)
 	dbSession := factory.DB(c.Request().Context())
@@ -73,7 +73,7 @@ func Test_StoreApiController_PostStore(t *testing.T) {
 	body, err := json.Marshal(param)
 	test.Ok(t, err)
 
-	req := httptest.NewRequest(echo.POST, "/v1/store", bytes.NewBuffer(body))
+	req := httptest.NewRequest(echo.POST, "/v1/stores", bytes.NewBuffer(body))
 
 	c, rec := SetContextWithToken(req, "")
 	dbSession := factory.DB(c.Request().Context())
@@ -135,7 +135,7 @@ func Test_StoreApiController_PutStore(t *testing.T) {
 	body, err := json.Marshal(param)
 	test.Ok(t, err)
 
-	req := httptest.NewRequest(echo.PUT, "/v1/store", bytes.NewBuffer(body))
+	req := httptest.NewRequest(echo.PUT, "/v1/stores", bytes.NewBuffer(body))
 
 	c, rec := SetContextWithToken(req, "")
 	dbSession := factory.DB(c.Request().Context())
