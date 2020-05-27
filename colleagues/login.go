@@ -100,7 +100,7 @@ func (Login) GetColleagueByUnionid(ctx context.Context, identiKey string) (Colle
 	return colleague, nil
 }
 
-func (Login) GetColleagueAndStores(ctx context.Context, tenantCode string, colleagueId int64) (map[string]interface{}, error) {
+func (Login) GetColleagueInfos(ctx context.Context, tenantCode string, colleagueId int64) (map[string]interface{}, error) {
 	colleague, err := Colleague{}.GetById(ctx, colleagueId)
 	if err != nil {
 		return nil, err
@@ -115,12 +115,18 @@ func (Login) GetColleagueAndStores(ctx context.Context, tenantCode string, colle
 		return nil, err
 	}
 
+	apps, err := colleague.GetAppAndRoles(ctx, tenantCode)
+	if err != nil {
+		return nil, err
+	}
+
 	result := make(map[string]interface{})
 	result["tenantCode"] = tenantCode
 	result["id"] = colleague.Id
 	result["name"] = colleague.Name
 	result["username"] = colleague.Username
 	result["stores"] = stores
+	result["apps"] = apps
 
 	return result, nil
 

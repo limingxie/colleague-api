@@ -47,8 +47,8 @@ func Test_LoginApiController_GetTokenDetail(t *testing.T) {
 	test.Equals(t, v.Result["colleagueId"].(float64), float64(1))
 }
 
-func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
-	req := httptest.NewRequest(echo.GET, "/v1/stores/authorization?colleagueId=1&tenantCode=hublabs", nil)
+func Test_LoginApiController_GetColleagueInfos(t *testing.T) {
+	req := httptest.NewRequest(echo.GET, "/v1/login/colleague-info", nil)
 
 	c, rec := SetContextWithToken(req, "")
 	dbSession := factory.DB(c.Request().Context())
@@ -58,7 +58,7 @@ func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 		factory.DB(c.Request().Context()).Rollback()
 	}()
 
-	test.Ok(t, LoginApiController{}.GetColleagueAndStores(c))
+	test.Ok(t, LoginApiController{}.GetColleagueInfos(c))
 	test.Equals(t, http.StatusOK, rec.Code)
 
 	var v struct {
@@ -104,4 +104,15 @@ func Test_LoginApiController_GetColleagueAndStores(t *testing.T) {
 	test.Equals(t, brands21[1].(map[string]interface{})["tenantCode"].(string), "hublabs")
 	test.Equals(t, brands21[1].(map[string]interface{})["code"].(string), "AD")
 	test.Equals(t, brands21[1].(map[string]interface{})["name"].(string), "Adidas")
+
+	apps := v.Result["apps"].([]interface{})
+	test.Equals(t, apps[0].(map[string]interface{})["id"].(float64), float64(1))
+	test.Equals(t, apps[0].(map[string]interface{})["code"].(string), "O2O")
+	test.Equals(t, apps[0].(map[string]interface{})["name"].(string), "在线抢单")
+	test.Equals(t, apps[0].(map[string]interface{})["role"].(string), "admin")
+
+	test.Equals(t, apps[1].(map[string]interface{})["id"].(float64), float64(2))
+	test.Equals(t, apps[1].(map[string]interface{})["code"].(string), "OHUB")
+	test.Equals(t, apps[1].(map[string]interface{})["name"].(string), "在线结算")
+	test.Equals(t, apps[1].(map[string]interface{})["role"].(string), "admin")
 }

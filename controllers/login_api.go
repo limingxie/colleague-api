@@ -16,7 +16,7 @@ type LoginApiController struct {
 func (c LoginApiController) Init(g *echo.Echo) {
 	//用户账号密码登录验证
 	g.POST("/v1/login/token-detail", c.GetTokenDetail)
-	g.GET("/v1/login/colleague-info", c.GetColleagueAndStores)
+	g.GET("/v1/login/colleague-info", c.GetColleagueInfos)
 
 }
 
@@ -39,7 +39,7 @@ func (c LoginApiController) GetTokenDetail(ctx echo.Context) error {
 	return renderSucc(ctx, http.StatusOK, tokenDetail)
 }
 
-func (c LoginApiController) GetColleagueAndStores(ctx echo.Context) error {
+func (c LoginApiController) GetColleagueInfos(ctx echo.Context) error {
 	userClaim := auth.UserClaim{}.FromCtx(ctx.Request().Context())
 	colleagueId := userClaim.ColleagueId
 	if userClaim.ColleagueId == 0 {
@@ -52,7 +52,7 @@ func (c LoginApiController) GetColleagueAndStores(ctx echo.Context) error {
 	}
 
 	/*=======================> Main Function Colleague.Authentication <=======================*/
-	result, err := colleagues.Login{}.GetColleagueAndStores(ctx.Request().Context(), tenantCode, colleagueId)
+	result, err := colleagues.Login{}.GetColleagueInfos(ctx.Request().Context(), tenantCode, colleagueId)
 	if err != nil {
 		return renderFail(ctx, api.ErrorDB.New(err))
 	}

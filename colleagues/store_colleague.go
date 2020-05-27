@@ -20,16 +20,6 @@ type StoreColleague struct {
 }
 
 func (colleague *Colleague) GetStoreAndRoles(ctx context.Context, tenantCode string) ([]StoreJsonView, error) {
-	if colleague.Stores == nil {
-		if err := colleague.loadStoreAndRoles(ctx, tenantCode); err != nil {
-			return nil, err
-		}
-	}
-
-	return colleague.Stores, nil
-}
-
-func (colleague *Colleague) loadStoreAndRoles(ctx context.Context, tenantCode string) error {
 	var storeJsonViews []StoreJsonView
 	if err := factory.DB(ctx).Select("store.id, store.code, store.name, store_colleague.role").
 		Table("store_colleague").
@@ -39,20 +29,18 @@ func (colleague *Colleague) loadStoreAndRoles(ctx context.Context, tenantCode st
 		And("store.tenant_code = ? ", tenantCode).
 		And("store.enable = ? ", true).
 		Find(&storeJsonViews); err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(storeJsonViews) > 0 {
 		for i := range storeJsonViews {
 			brands, err := Store{}.GetBrandsByStoreId(ctx, storeJsonViews[i].Id)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			storeJsonViews[i].Brands = brands
 		}
 	}
 
-	colleague.Stores = storeJsonViews
-
-	return nil
+	return storeJsonViews, nil
 }

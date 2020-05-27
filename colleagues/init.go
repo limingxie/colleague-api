@@ -11,6 +11,8 @@ func Init(xormEngine *xorm.Engine) error {
 		new(Store),
 		new(StoreBrand),
 		new(StoreColleague),
+		new(App),
+		new(ColleagueApp),
 	)
 	//xormEngine.ShowSQL(true)
 
@@ -22,11 +24,12 @@ func DropTables(xormEngine *xorm.Engine) error {
 		new(Store),
 		new(StoreBrand),
 		new(StoreColleague),
+		new(App),
+		new(ColleagueApp),
 	)
 }
 
 func Seed(xormEngine *xorm.Engine) error {
-
 	var (
 		colleagues = []Colleague{
 			{Id: 1, Username: "system", Name: "系统管理员", Email: "system@email.com", Password: "1111", Enable: true},
@@ -60,6 +63,24 @@ func Seed(xormEngine *xorm.Engine) error {
 			{Id: 7, ColleagueId: 5, StoreId: 2, StartDate: "", EndDate: "", Role: "admin", Enable: true},
 			{Id: 8, ColleagueId: 6, StoreId: 3, StartDate: "", EndDate: "", Role: "admin", Enable: true},
 		}
+
+		apps = []App{
+			{Id: 1, Code: "O2O", Name: "在线抢单", TenantCode: "hublabs", Enable: true},
+			{Id: 2, Code: "OHUB", Name: "在线结算", TenantCode: "hublabs", Enable: true},
+		}
+
+		colleagueApps = []ColleagueApp{
+			{Id: 1, ColleagueId: 1, AppId: 1, Role: "admin", Enable: true},
+			{Id: 2, ColleagueId: 1, AppId: 2, Role: "admin", Enable: true},
+			{Id: 3, ColleagueId: 2, AppId: 1, Role: "admin", Enable: true},
+			{Id: 4, ColleagueId: 2, AppId: 2, Role: "admin", Enable: true},
+			{Id: 5, ColleagueId: 3, AppId: 1, Role: "member", Enable: true},
+			{Id: 6, ColleagueId: 4, AppId: 1, Role: "guest", Enable: true},
+			{Id: 7, ColleagueId: 5, AppId: 1, Role: "admin", Enable: true},
+			{Id: 8, ColleagueId: 5, AppId: 2, Role: "admin", Enable: true},
+			{Id: 9, ColleagueId: 6, AppId: 1, Role: "admin", Enable: true},
+			{Id: 10, ColleagueId: 6, AppId: 2, Role: "admin", Enable: true},
+		}
 	)
 
 	for _, u := range colleagues {
@@ -81,6 +102,18 @@ func Seed(xormEngine *xorm.Engine) error {
 	}
 
 	for _, u := range storeColleagues {
+		if _, err := xormEngine.Insert(&u); err != nil {
+			return err
+		}
+	}
+
+	for _, u := range apps {
+		if _, err := xormEngine.Insert(&u); err != nil {
+			return err
+		}
+	}
+
+	for _, u := range colleagueApps {
 		if _, err := xormEngine.Insert(&u); err != nil {
 			return err
 		}
